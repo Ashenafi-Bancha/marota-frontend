@@ -21,6 +21,7 @@ export default defineConfig({
         },
       },
     }),
-  ]
+  ],
+  base: '/marota-frontend/',
  
 })
