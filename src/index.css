@@ -1,0 +1,38 @@
+
+/* Google fonts used in your original site */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap');
+
+@import "tailwindcss";
+
+
+:root{
+  --primary-dark: #0a192f;
+  --primary-light: #112240;
+  --accent-blue: #64ffda;
+  --accent-orange: #ff6b6b;
+  --text-light: #ccd6f6;
+  --text-lighter: #a8b2d1;
+}
+
+/* basic page defaults that Tailwind won't set for you */
+html, body, #root { height: 100%; }
+html {
+  @apply scroll-smooth;
+}
+
+body {
+  @apply bg-[var(--primary-dark)] text-[var(--text-light)] antialiased;
+  font-family: 'Raleway', sans-serif;
+}
+h1,h2,h3,h4,h5 {
+  font-family: 'Montserrat', sans-serif;
+  color: rgb(255,221,100);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
