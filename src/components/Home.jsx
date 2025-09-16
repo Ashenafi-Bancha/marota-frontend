@@ -46,11 +46,10 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-7xl px-5 md:text-left w-full text-center mt-[-10px] mx-auto">
         <h1 className="font-bold leading-tight my-2 text-4xl md:text-5xl lg:text-6xl p-2 mx-auto  text-center">
-          Welcome to Marota Cinematography
+          Welcome to Marota Film
           <span className="text-[var(--accent-blue)]">
             {" "}
-            and Software Institute
-          </span>
+            and Software Collage </span>
         </h1>
 
         <p className="md:text-2xl mb-2 max-w-3xl text-gray-200 leading-relaxed mx-auto px-4 py-2 ">

@@ -27,7 +27,7 @@ function Footer() {
             <li><a href="#about" className="hover:text-yellow-200 transition">About</a></li>
             <li><a href="#services" className="hover:text-yellow-200 transition">Services</a></li>
             <li><a href="#instructors" className="hover:text-yellow-200 transition">Instructors</a></li>
-            <li><a href="#showcase" className="hover:text-yellow-200 transition">Portfolio</a></li>
+            <li><a href="#portfolio" className="hover:text-yellow-200 transition">Portfolio</a></li>
             <li><a href="#gallery" className="hover:text-yellow-200 transition">Gallery</a></li>
             <li><a href="#testimonials" className="hover:text-yellow-200 transition" >Testimonials</a></li>
             <li><a href="#contact" className="hover:text-yellow-200 transition">Contact</a></li>
@@ -67,16 +67,14 @@ function Footer() {
             <a href="https://www.tiktok.com/@marota.acadamy?_t=ZN-8xuxFw8tk2Q&_r=1" target="_blank" title="Follow us on TikTok" className="transition transform hover:-translate-y-1 rounded-full p-2 bg-black">
               <FaTiktok className="text-white" size={22} />
             </a>
-            <a href="#" title="Follow us on LinkedIn" className="transition transform hover:-translate-y-1 rounded-full p-2 bg-blue-700">
+            <a href="#" target="_blank" title="Follow us on LinkedIn" className="transition transform hover:-translate-y-1 rounded-full p-2 bg-blue-700">
               <FaLinkedinIn className="text-white" size={22} />
             </a>
-            <a href="#" title="Follow us on Twitter" className="transition transform hover:-translate-y-1 rounded-full p-2 bg-sky-400">
-              <FaTwitter className="text-white" size={22} />
-            </a>
+            
             <a href="#" title="Follow us on Instagram" className="transition transform hover:-translate-y-1 rounded-full p-2 bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-400">
               <FaInstagram className="text-white" size={22} />
             </a>
-            <a href="#" title="Visit our YouTube channel" className="transition transform hover:-translate-y-1 rounded-full p-2 bg-red-600">
+            <a href="https://www.youtube.com/channel/UCYxPI7bef6t6uGjywEnYJsQ" target="_blank" title="Visit our YouTube channel" className="transition transform hover:-translate-y-1 rounded-full p-2 bg-red-600">
               <FaYoutube className="text-white" size={22} />
             </a>
           </div>
