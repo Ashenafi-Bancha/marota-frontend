@@ -11,7 +11,7 @@ import { FaFacebookF, FaLinkedinIn, FaTelegram } from "react-icons/fa";
 const instructors = [
   { name: "Mathewos Ermias", role: "Photograpy and Videography, Cordinator", img: Mathewos },
 
-  { name: "Lidya Abera", role: "Customer Service and Basic Computer Skills", img: Lidya },
+  { name: "Lidiya Yonas", role: "Customer Service and Basic Computer Skills", img: Lidya },
   { name: "Eyonadab Malove", role: "Script writer, Directing, acting", img: Eyonadab },
   { name: "Kidist Yonas", role: "Graphic Designer", img: Kidist },
   { name: "Salah Anjoniyo",  role: "Film Instructor", img: Salah },
