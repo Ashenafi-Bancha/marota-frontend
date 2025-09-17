@@ -1,8 +1,8 @@
 
 import { useInView } from "react-intersection-observer";
-import Image1 from "../assets/about.jpg";
-import Image2 from "../assets/camera-men.jpg";
-import Image3 from "../assets/pc-users-group.jpg";
+import Image1 from "../assets/about1.jpg";
+import Image2 from "../assets/about5.jpg";
+import Image3 from "../assets/about4.jpg";
 export default function About() {
   const [ref1, inView1] = useInView({ triggerOnce: true, threshold: 0.2 });
   const [ref2, inView2] = useInView({ triggerOnce: true, threshold: 0.2 });

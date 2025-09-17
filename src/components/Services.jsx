@@ -34,7 +34,7 @@ const diplomaLevels = [
         title: "Web Development and Database Administration",
         description: "Introduction to filming and photo capturing basics.",
         tools: ["Operate Personal computer", "Connect hardware peripherals", "Install software application", "Protect application or system software", "Maintain Inventories of hardware and software and documentation", "Operate word processing applications", "Operate spreadsheet applications", "Operate presentation application", "Access and use database applications", "Apply 5s procedures", "Create a simple markup language document"],
-        icon: <FaVideo className="text-4xl text-[#ff6b6b]" />,
+        icon: <FaDatabase className="text-4xl text-[#ff6b6b]" />,
       },
       
     ],
@@ -82,7 +82,7 @@ const diplomaLevels = [
         title: "Web Development and Database Administration",
         description: "Design beautiful and user-friendly web interfaces.",
         tools: ["Website technical Requirement Modeling", "Model data objects", "Develop website information architecture", "Design program logic", "Delelop Cascaded Style sheets", "Write contents for Webpages", "Use Basic SQL", "Integrate Database with a website", "Monitore and support data conversion", "Evalute and select web hosting service" ],
-        icon: <FaPaintBrush className="text-4xl text-[#ff9f1c]" />,
+        icon: <FaDatabase className="text-4xl text-[#ff9f1c]" />,
       },
     ],
   },
@@ -156,6 +156,11 @@ const shortCourses = [
     description:
       "Create visually stunning designs for social media, advertisements, and digital content.",
     tools: [
+      "Photography",
+      "Videography",
+      "Camera Operation",
+      "Lighting Techniques",
+      "Editing Software",
       "Adobe Photoshop",
       "Illustrator",
       "Canva",
@@ -170,6 +175,9 @@ const shortCourses = [
     description:
       "Design creative and unique logos that represent your brand identity perfectly.",
     tools: [
+      "Branding Design",
+      "Product Design",
+      "Publishing Design",
       "Illustrator",
       "CorelDRAW",
       "Canva",
@@ -237,7 +245,7 @@ const Services = () => {
 
         {/* Short Courses */}
         <h3 className="text-3xl md:text-4xl font-bold mb-10 text-center !text-[var(--accent-blue)]">
-          3-Month Short Courses
+         Short Term Courses(3-6 Months)
         </h3>
         <CourseCards courses={shortCourses} />
       </div>

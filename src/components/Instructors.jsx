@@ -1,13 +1,21 @@
 // src/components/Instructors.jsx
+import Mathewos from "../assets/instructors/Ermias.jpg";
+import Lidya from "../assets/instructors/Lidya.jpg";
+import Eyonadab from "../assets/instructors/eyonadab.jpg";
+import Kidist from "../assets/instructors/Kdist.jpg";
+import Salah from "../assets/instructors/salah.jpg";
+import Wondimagegn from "../assets/instructors/wonde.jpg";
+
 import { FaFacebookF, FaLinkedinIn, FaTelegram } from "react-icons/fa";
 
 const instructors = [
-  { name: "Mathewos Ermias", role: "Film Instructor", img: "https://randomuser.me/api/portraits/men/32.jpg" },
-  { name: "Lidya Abera", role: "Web Development Trainer", img: "https://randomuser.me/api/portraits/women/44.jpg" },
-  { name: "Natinael Eyasu", role: "Graphics Designer", img: "https://randomuser.me/api/portraits/men/56.jpg" },
-  { name: "Amanuel B.", role: "Film Instructor", img: "https://randomuser.me/api/portraits/men/32.jpg" },
-  { name: "Emiru L.", role: "Web Development Trainer", img: "https://randomuser.me/api/portraits/women/44.jpg" },
-  { name: "Matusala A.", role: "Graphics Designer", img: "https://randomuser.me/api/portraits/men/56.jpg" }
+  { name: "Mathewos Ermias", role: "Photograpy and Videography, Cordinator", img: Mathewos },
+
+  { name: "Lidya Abera", role: "Web Development Trainer", img: Lidya },
+  { name: "Eyonadab Malove", role: "Script writer, Directing, acting", img: Eyonadab },
+  { name: "Kidist Yonas", role: "Graphic Designer", img: Kidist },
+  { name: "Salah Anjoniyo",  role: "Film Instructor", img: Salah },
+  { name: "Wondimagegn Desta", role: "Website Design and Database Administrator", img: Wondimagegn },
 ];
 
 export default function Instructors() {

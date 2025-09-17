@@ -1,5 +1,5 @@
 // src/components/Footer.jsx
-import { FaFacebookF, FaTelegramPlane, FaTiktok, FaLinkedinIn, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaFacebookF, FaTelegramPlane, FaTiktok, FaLinkedinIn, FaInstagram, FaYoutube } from "react-icons/fa";
 import logo from "../assets/logo1.png";
 
 function Footer() {
@@ -40,13 +40,13 @@ function Footer() {
             Academy Programs
           </h4>
           <ul className="space-y-2 text-sm text-left">
-            <li><a href="#services" className="hover:text-yellow-200 transition">Cinematography Mastery</a></li>
-            <li><a href="#services" className="hover:text-yellow-200 transition">Film Direction Workshop</a></li>
-            <li><a href="#services" className="hover:text-yellow-200 transition">Full-Stack Development</a></li>
-            <li><a href="#services" className="hover:text-yellow-200 transition">Mobile App Development</a></li>
+            <li><a href="#services" className="hover:text-yellow-200 transition"> Basic Cinematography Concepts</a></li>
+            <li><a href="#services" className="hover:text-yellow-200 transition">Film Making </a></li>
+            <li><a href="#services" className="hover:text-yellow-200 transition">Web Design and Development</a></li>
+            <li><a href="#services" className="hover:text-yellow-200 transition">Database Administrattion</a></li>
             <li><a href="#services" className="hover:text-yellow-200 transition">Basick Computer Skills</a></li>
             <li><a href="#services" className="hover:text-yellow-200 transition">Graphics Design</a></li>
-            <li><a href="#services" className="hover:text-yellow-200 transition">IT Support and Networking</a></li>
+            <li><a href="#services" className="hover:text-yellow-200 transition">Network and Hardware Servicing</a></li>
             <li><a href="#services" className="hover:text-yellow-200 transition">Logo Design</a></li>
 
           </ul>
@@ -91,7 +91,7 @@ function Footer() {
             className="w-5 h-5 md:w-6 md:h-6 rounded-full object-contain"
           />
           <span className="text-xs sm:text-sm md:text-base text-center whitespace-nowrap">
-            &copy; {new Date().getFullYear()} Marota Cinematography & Software Academy. All Rights Reserved.
+            &copy; {new Date().getFullYear()} Marota Film & Software Collage. All Rights Reserved.
           </span>
         </div>
       </div>
