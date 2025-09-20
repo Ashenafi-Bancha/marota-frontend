@@ -15,7 +15,7 @@ export default function About() {
         <div className={`md:w-1/2 space-y-6 transition-all duration-1000 ease-out transform ${inView1 ? "translate-x-0 opacity-100" : "-translate-x-20 opacity-0"}`} ref={ref1}>
           <h2 className="text-4xl font-bold text-[var(--accent-blue)] text-center md:text-left">About Marota</h2>
           <p className="text-gray-300 leading-relaxed">
-            Marota Cinematography & Software Institute is where <span className="text-[var(--accent-orange)] font-semibold">cinematic artistry and digital innovation converge</span> to create extraordinary experiences. 
+            Marota Film & Software Collage is where <span className="text-[var(--accent-orange)] font-semibold">cinematic artistry and digital innovation converge</span> to create extraordinary experiences. 
             We are committed to building a digitally empowered Ethiopia, with a special focus on <span className="font-semibold">Southern Ethiopia, particularly Wolaita</span>, by equipping students with world-class skills in film, web development, graphics, and emerging technologies.
           </p>
 

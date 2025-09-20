@@ -5,6 +5,7 @@ import Eyonadab from "../assets/instructors/eyonadab.jpg";
 import Kidist from "../assets/instructors/Kdist.jpg";
 import Salah from "../assets/instructors/salah.jpg";
 import Wondimagegn from "../assets/instructors/wonde.jpg";
+import Mercy from "../assets/instructors/mercy.jpg"
 
 import { FaFacebookF, FaLinkedinIn, FaTelegram } from "react-icons/fa";
 
@@ -16,6 +17,7 @@ const instructors = [
   { name: "Kidist Yonas", role: "Graphic Designer", img: Kidist },
   { name: "Salah Anjoniyo",  role: "Film Instructor", img: Salah },
   { name: "Wondimagegn Desta", role: "Website Design and Database Administrator", img: Wondimagegn },
+  { name: "Mercy Tekile",  role: "Video and Photo Editor", img:Mercy},
 ];
 
 export default function Instructors() {

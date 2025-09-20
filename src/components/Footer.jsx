@@ -9,8 +9,8 @@ function Footer() {
 
         {/* About */}
         <div className="sm:flex sm:flex-col sm:items-center">
-          <h4 className="text-xl font-semibold text-white mb-4 relative ">
-            Marota Studio
+          <h4 className="text-xl font-semibold text-white mb-4 relative !text-left ">
+            MAROTA 
           </h4>
           <p className="text-sm leading-relaxed text-left">
            Where cinematic artistry and digital innovation converge to create extraordinary experiences, Marota is dedicated to empowering Ethiopia’s digital transformation. We focus on building creative and technical capacity across the nation — with a special commitment to Southern Ethiopia, particularly Wolaita by training the next generation in film, web development, graphics, and emerging technologies.
