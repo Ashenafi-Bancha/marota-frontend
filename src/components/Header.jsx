@@ -6,9 +6,15 @@ import { FaBars, FaTimes, FaSearch, FaUserCircle, FaChevronDown, FaSignOutAlt } 
 import { useSearch } from "../context/SearchContext";
 import { diplomaLevels, shortCourses } from "../data/courses";
 import { useAuth } from "../context/AuthContext";
+import Login from "./Login";
+import Register from "./Register";
+import Modal from "./Modal";
 
  const Header = () => {
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [mobileProfileMenuOpen, setMobileProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
@@ -73,6 +79,7 @@ import { useAuth } from "../context/AuthContext";
 
   const handleCourseSelect = (title) => {
     setSearchQuery(title);
+    setMobileSearchOpen(false);
     const target = document.getElementById("services");
     if (target) {
     target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -169,6 +176,7 @@ import { useAuth } from "../context/AuthContext";
   useEffect(() => {
     setProfileMenuOpen(false);
     setMobileProfileMenuOpen(false);
+    setMobileSearchOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -190,7 +198,70 @@ import { useAuth } from "../context/AuthContext";
         {/* Logo */}
         <div className="logo flex min-w-0 shrink-0 cursor-pointer items-center gap-2">
           <img src={logo} alt="Marota Logo" className="h-10 rounded-full ring-2 ring-cyan-300/30 sm:h-11 lg:h-12"/>
-          <p className="hidden text-lg font-bold uppercase leading-none text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.28)] sm:block lg:text-2xl font-serif">Marota</p>
+          <p className="block text-sm font-bold uppercase leading-none text-yellow-300 drop-shadow-[0_0_10px_rgba(250,204,21,0.28)] sm:text-lg lg:text-2xl font-serif">Marota</p>
+        </div>
+
+        <div className="xl:hidden flex-1 flex justify-center px-2 relative">
+          {!mobileSearchOpen ? (
+            <button
+              type="button"
+              onClick={() => setMobileSearchOpen(true)}
+              className="h-9 w-9 inline-flex items-center justify-center rounded-full border border-slate-600 bg-[#0f2240] text-gray-200"
+              aria-label="Open search"
+            >
+              <FaSearch />
+            </button>
+          ) : (
+            <form
+              className="flex w-full max-w-[220px] items-center rounded-full border border-slate-600 bg-[#0f2240] px-3 py-1.5"
+              onSubmit={handleSearchSubmit}
+            >
+              <FaSearch className="text-gray-300 mr-2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className="no-focus-ring bg-transparent outline-none px-1 py-1 text-sm text-gray-100 w-full placeholder:text-gray-400"
+                aria-label="Search courses"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileSearchOpen(false);
+                  setSearchQuery("");
+                }}
+                className="h-7 w-7 inline-flex items-center justify-center rounded-full text-gray-300"
+                aria-label="Close search"
+              >
+                <FaTimes className="text-sm" />
+              </button>
+            </form>
+          )}
+
+          {mobileSearchOpen && normalizedQuery && (
+            <div className="absolute top-11 left-1/2 -translate-x-1/2 w-[min(84vw,320px)] rounded-xl bg-gray-800 border border-gray-700 shadow-xl overflow-hidden z-[70]">
+              {courseResults.length === 0 ? (
+                <div className="px-4 py-3 text-sm text-gray-300">No matching courses.</div>
+              ) : (
+                <ul className="max-h-64 overflow-auto">
+                  {courseResults.map((course) => (
+                    <li key={`mobile-head-${course.type}-${course.title}-${course.group}`}>
+                      <button
+                        type="button"
+                        onMouseDown={() => handleCourseSelect(course.title)}
+                        className="btn-dropdown w-full text-left px-4 py-3 hover:bg-gray-700 transition flex flex-col"
+                      >
+                        <span className="text-sm font-semibold text-white">{course.title}</span>
+                        <span className="text-xs text-gray-400">{course.group} • {course.type}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
         
         {/* Desktop Nav */}
@@ -347,14 +418,20 @@ import { useAuth } from "../context/AuthContext";
             <div className="hidden xl:flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  setShowLogin(true);
+                  setShowRegister(false);
+                }}
                 className="bg-cyan-400 px-3 py-2 rounded-lg hover:bg-cyan-500 text-sm whitespace-nowrap"
               >
                 Sign In
               </button>
               <button
                 type="button"
-                onClick={() => navigate("/signup")}
+                onClick={() => {
+                  setShowRegister(true);
+                  setShowLogin(false);
+                }}
                 className="btn-signup bg-yellow-400 px-3 py-2 rounded-lg hover:bg-yellow-500 text-sm whitespace-nowrap"
               >
                 Sign Up
@@ -410,54 +487,6 @@ import { useAuth } from "../context/AuthContext";
               );
             }
           )}
-        <form
-          className="flex w-full items-center rounded-full border border-slate-600 bg-[#0f2240] px-3 py-2"
-          onSubmit={handleSearchSubmit}
-        >
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search courses..."
-            className="no-focus-ring bg-transparent outline-none px-2 py-1 text-gray-100 w-full"
-            aria-label="Search courses"
-          />
-          <button
-            type="submit"
-            className="text-gray-200 mr-2"
-            aria-label="Search"
-          >
-            <FaSearch />
-          </button>
-        </form>
-        {normalizedQuery && (
-          <div className="w-full rounded-xl bg-gray-800 border border-gray-700 shadow-xl overflow-hidden">
-            {courseResults.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-gray-300">
-                No matching courses.
-              </div>
-            ) : (
-              <ul className="max-h-64 overflow-auto">
-                {courseResults.map((course) => (
-                  <li key={`mobile-${course.type}-${course.title}-${course.group}`}>
-                    <button
-                      type="button"
-                      onMouseDown={() => handleCourseSelect(course.title)}
-                      className="btn-dropdown w-full text-left px-4 py-3 hover:bg-gray-700 transition flex flex-col"
-                    >
-                      <span className="text-sm font-semibold text-white">
-                        {course.title}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {course.group} • {course.type}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
         {user ? (
           <div className="flex flex-col items-center gap-3 w-full">
             {!isAdmin && (
@@ -521,7 +550,8 @@ import { useAuth } from "../context/AuthContext";
               type="button"
               onClick={() => {
                 setMenuOpen(false);
-                navigate("/login");
+                setShowLogin(true);
+                setShowRegister(false);
               }}
               className="bg-cyan-400 px-3 py-2 rounded-lg hover:bg-cyan-500 w-full"
             >
@@ -531,7 +561,8 @@ import { useAuth } from "../context/AuthContext";
               type="button"
               onClick={() => {
                 setMenuOpen(false);
-                navigate("/signup");
+                setShowRegister(true);
+                setShowLogin(false);
               }}
               className="btn-signup bg-yellow-400 px-3 py-2 rounded-lg hover:bg-yellow-500 w-full"
             >
@@ -540,6 +571,33 @@ import { useAuth } from "../context/AuthContext";
           </div>
         )}
         </div>
+      )}
+
+      {showLogin && (
+        <Modal onClose={() => setShowLogin(false)}>
+          <Login
+            onLoginSuccess={() => {
+              setShowLogin(false);
+              navigate("/dashboard");
+            }}
+            onSwitchToRegister={() => {
+              setShowLogin(false);
+              setShowRegister(true);
+            }}
+          />
+        </Modal>
+      )}
+
+      {showRegister && (
+        <Modal onClose={() => setShowRegister(false)}>
+          <Register
+            onRegisterSuccess={() => {}}
+            onSwitchToLogin={() => {
+              setShowRegister(false);
+              setShowLogin(true);
+            }}
+          />
+        </Modal>
       )}
     </header>
   );
