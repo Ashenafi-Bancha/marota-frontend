@@ -19,6 +19,7 @@ import {
 export default function MyCourses() {
   const { user, isAdmin, loading: authLoading } = useAuth();
   const [enrollments, setEnrollments] = useState([]);
+  const [availableCurriculumKeys, setAvailableCurriculumKeys] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [profileName, setProfileName] = useState("");
   const [statusMessage, setStatusMessage] = useState(null);
@@ -126,7 +127,29 @@ export default function MyCourses() {
       if (enrollmentsRes.error) {
         setStatusMessage({ type: "error", text: enrollmentsRes.error.message });
       } else {
-        setEnrollments(enrollmentsRes.data || []);
+        const rows = enrollmentsRes.data || [];
+        setEnrollments(rows);
+
+        const shortCourseKeys = rows
+          .map((item) => normalizeCourseIdentity(item.course_title))
+          .filter((key) => key.toLowerCase().startsWith("short course::"));
+
+        if (shortCourseKeys.length > 0) {
+          const { data: curriculumRows, error: curriculumError } = await supabase
+            .from("short_course_modules")
+            .select("course_key")
+            .in("course_key", shortCourseKeys);
+
+          if (!curriculumError && curriculumRows) {
+            setAvailableCurriculumKeys(
+              new Set(curriculumRows.map((item) => normalizeCourseIdentity(item.course_key)))
+            );
+          } else {
+            setAvailableCurriculumKeys(new Set());
+          }
+        } else {
+          setAvailableCurriculumKeys(new Set());
+        }
       }
 
       if (!profileRes.error && profileRes.data?.full_name) {
@@ -514,6 +537,17 @@ export default function MyCourses() {
               course.parsedCourse.scope ||
               "Course";
             const completed = progress >= 100;
+            const approvalStatus = course.approval_status || "pending";
+            const isApproved = approvalStatus === "approved";
+            const isShortCourse =
+              (details?.type || "").toLowerCase() === "short" ||
+              String(scopeLabel).toLowerCase() === "short course";
+            const learningUrl = `/learning/${encodeURIComponent(
+              normalizeCourseIdentity(course.course_title)
+            )}`;
+            const hasCurriculum = availableCurriculumKeys.has(
+              normalizeCourseIdentity(course.course_title)
+            );
 
             return (
               <div
@@ -561,7 +595,7 @@ export default function MyCourses() {
 
                 <div className="w-full flex items-center justify-center pb-1">
                   {completed ? (
-                    <div className="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="w-full max-w-3xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       <button
                         type="button"
                         onClick={() => viewCertificate(title, !completed)}
@@ -584,15 +618,43 @@ export default function MyCourses() {
                         <FaLinkedin className="text-sm" />
                         Share on LinkedIn
                       </button>
+                      {isShortCourse && isApproved &&
+                        (hasCurriculum ? (
+                          <Link
+                            to={learningUrl}
+                            className="w-full inline-flex items-center justify-center px-3 py-2 rounded-full text-xs font-semibold bg-cyan-500 text-white hover:bg-cyan-400"
+                          >
+                            Start Learning
+                          </Link>
+                        ) : (
+                          <span className="w-full inline-flex items-center justify-center px-3 py-2 rounded-full text-xs font-semibold bg-gray-700 text-gray-200">
+                            Coming Soon • Curriculum in progress
+                          </span>
+                        ))}
                     </div>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => viewCertificate(title, !completed)}
-                      className="w-full max-w-xs px-3 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-900 hover:bg-gray-200"
-                    >
-                      View Certificate
-                    </button>
+                    <div className="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => viewCertificate(title, !completed)}
+                        className="w-full px-3 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-900 hover:bg-gray-200"
+                      >
+                        View Certificate
+                      </button>
+                      {isShortCourse && isApproved &&
+                        (hasCurriculum ? (
+                          <Link
+                            to={learningUrl}
+                            className="w-full inline-flex items-center justify-center px-3 py-2 rounded-full text-xs font-semibold bg-cyan-500 text-white hover:bg-cyan-400"
+                          >
+                            Start Learning
+                          </Link>
+                        ) : (
+                          <span className="w-full inline-flex items-center justify-center px-3 py-2 rounded-full text-xs font-semibold bg-gray-700 text-gray-200">
+                            Coming Soon • Curriculum in progress
+                          </span>
+                        ))}
+                    </div>
                   )}
                 </div>
               </div>

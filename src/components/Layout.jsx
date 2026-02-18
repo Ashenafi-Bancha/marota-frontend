@@ -40,6 +40,19 @@ const SEO_BY_ROUTE = {
     description:
       "Manage users, enrollments, and platform activity from the Marota admin dashboard.",
   },
+  "/learning": {
+    title: "Course Learning | Marota",
+    description:
+      "Access lessons, modules, quizzes, projects, and final tests in your approved Marota courses.",
+  },
+};
+
+const resolveSeoForPath = (pathname) => {
+  if (pathname.startsWith("/learning/")) {
+    return SEO_BY_ROUTE["/learning"];
+  }
+
+  return SEO_BY_ROUTE[pathname] || SEO_BY_ROUTE["/"];
 };
 
 const updateMetaTag = (name, content, property = false) => {
@@ -64,7 +77,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    const seo = SEO_BY_ROUTE[location.pathname] || SEO_BY_ROUTE["/"];
+    const seo = resolveSeoForPath(location.pathname);
 
     document.title = seo.title;
     updateMetaTag("description", seo.description);

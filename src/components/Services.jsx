@@ -41,6 +41,7 @@ const CourseCard = ({
   enrollmentStatus,
   onEnroll,
   isAdminView,
+  curriculumStatus,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const visibleRating = userRating || Math.round(aggregateRating?.average || 0);
@@ -62,6 +63,19 @@ const CourseCard = ({
           <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#0a192f] text-gray-300 border border-gray-700">
             Course
           </span>
+          {course.type === "Short" && curriculumStatus && (
+            <span
+              className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
+                curriculumStatus === "ready"
+                  ? "bg-cyan-500/20 text-cyan-200 border-cyan-500/60"
+                  : "bg-gray-700 text-gray-200 border-gray-600"
+              }`}
+            >
+              {curriculumStatus === "ready"
+                ? "Curriculum Ready"
+                : "Coming Soon • Curriculum in progress"}
+            </span>
+          )}
         </div>
       </div>
 
@@ -199,6 +213,7 @@ const CourseCards = ({
   onEnroll,
   enrollmentStatusMap,
   isAdminView,
+  curriculumStatusMap,
 }) => (
   <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6 lg:gap-8">
     {courses.map((course, index) => (
@@ -211,6 +226,7 @@ const CourseCards = ({
         enrollmentStatus={enrollmentStatusMap.get(course.identityKey) || null}
         onEnroll={onEnroll}
         isAdminView={isAdminView}
+        curriculumStatus={curriculumStatusMap?.get(course.identityKey) || null}
       />
     ))}
   </div>
@@ -516,6 +532,16 @@ const Services = () => {
       identityKey: buildCourseIdentity({ ...course, group: "Short Course", type: "Short" }),
     }));
 
+  const shortCourseCurriculumStatusMap = useMemo(() => {
+    const readyKeys = new Set(["Short Course::Basic Computer Skills"]);
+    return new Map(
+      filteredShortCourses.map((course) => [
+        course.identityKey,
+        readyKeys.has(course.identityKey) ? "ready" : "coming-soon",
+      ])
+    );
+  }, [filteredShortCourses]);
+
   const hasResults =
     filteredDiplomaLevels.length > 0 || filteredShortCourses.length > 0;
 
@@ -571,6 +597,7 @@ const Services = () => {
                 onEnroll={handleEnrollCourse}
                 enrollmentStatusMap={enrollmentStatusMap}
                 isAdminView={isAdmin}
+                curriculumStatusMap={new Map()}
               />
             </div>
           </div>
@@ -588,6 +615,7 @@ const Services = () => {
             onEnroll={handleEnrollCourse}
             enrollmentStatusMap={enrollmentStatusMap}
             isAdminView={isAdmin}
+            curriculumStatusMap={shortCourseCurriculumStatusMap}
           />
         </div>
       </div>

@@ -7,12 +7,14 @@ import {
   isMissingApprovalStatusColumnError,
   withDefaultApprovedStatus,
 } from "../utils/enrollmentApproval";
+import { normalizeCourseIdentity, parseCourseIdentity } from "../utils/courseIdentity";
 
 export default function Dashboard() {
   const { user, isAdmin } = useAuth();
   const [loading, setLoading] = useState(true);
   const [statusMessage, setStatusMessage] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
+  const [availableCurriculumKeys, setAvailableCurriculumKeys] = useState(new Set());
 
   const stats = useMemo(() => {
     const approved = enrollments.filter(
@@ -65,7 +67,29 @@ export default function Dashboard() {
       if (enrollmentsRes.error) {
         setStatusMessage({ type: "error", text: enrollmentsRes.error.message });
       } else {
-        setEnrollments(enrollmentsRes.data || []);
+        const rows = enrollmentsRes.data || [];
+        setEnrollments(rows);
+
+        const shortCourseKeys = rows
+          .map((item) => normalizeCourseIdentity(item.course_title))
+          .filter((key) => key.toLowerCase().startsWith("short course::"));
+
+        if (shortCourseKeys.length > 0) {
+          const { data: curriculumRows, error: curriculumError } = await supabase
+            .from("short_course_modules")
+            .select("course_key")
+            .in("course_key", shortCourseKeys);
+
+          if (!curriculumError && curriculumRows) {
+            setAvailableCurriculumKeys(
+              new Set(curriculumRows.map((item) => normalizeCourseIdentity(item.course_key)))
+            );
+          } else {
+            setAvailableCurriculumKeys(new Set());
+          }
+        } else {
+          setAvailableCurriculumKeys(new Set());
+        }
       }
 
       setLoading(false);
@@ -161,6 +185,58 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-8 bg-gray-800 rounded-2xl p-6 border border-gray-700">
+        <h2 className="text-xl font-semibold mb-3 text-white">Your Applications</h2>
+        {enrollments.length === 0 ? (
+          <p className="text-sm text-gray-300">No applications yet.</p>
+        ) : (
+          <div className="space-y-3 mb-6">
+            {enrollments.map((item) => {
+              const normalizedKey = normalizeCourseIdentity(item.course_title);
+              const parsedCourse = parseCourseIdentity(item.course_title);
+              const approvalStatus = item.approval_status || "approved";
+              const isShortCourse = normalizedKey.toLowerCase().startsWith("short course::");
+              const hasCurriculum = availableCurriculumKeys.has(normalizedKey);
+
+              return (
+                <div
+                  key={`${item.course_title}-${approvalStatus}`}
+                  className="bg-gray-900 rounded-xl border border-gray-700 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                >
+                  <div>
+                    <p className="text-white font-medium">{parsedCourse.title || item.course_title}</p>
+                    <p className="text-xs text-gray-400">
+                      {parsedCourse.scope || "Course"} • Progress {item.progress || 0}%
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        approvalStatus === "approved"
+                          ? "bg-green-600 text-white"
+                          : approvalStatus === "pending"
+                          ? "bg-amber-500 text-gray-900"
+                          : "bg-red-600 text-white"
+                      }`}
+                    >
+                      {approvalStatus.charAt(0).toUpperCase() + approvalStatus.slice(1)}
+                    </span>
+                    {isShortCourse && approvalStatus === "approved" &&
+                      (hasCurriculum ? (
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500 text-white">
+                          Curriculum Ready
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-700 text-gray-200">
+                          Coming Soon • Curriculum in progress
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         <h2 className="text-xl font-semibold mb-3 text-white">What to do next</h2>
         <ul className="space-y-2 text-sm text-gray-300">
           <li className="flex items-start gap-2">

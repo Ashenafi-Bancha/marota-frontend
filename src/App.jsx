@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import MyCourses from "./pages/MyCourses";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
+import CourseLearning from "./pages/CourseLearning";
 
 function App() {
   return (
@@ -78,6 +79,16 @@ function App() {
               <AdminRoute>
                 <AdminDashboard />
               </AdminRoute>
+            </Layout>
+          }
+        />
+        <Route
+          path="/learning/:courseKey"
+          element={
+            <Layout>
+              <ProtectedRoute>
+                <CourseLearning />
+              </ProtectedRoute>
             </Layout>
           }
         />
