@@ -1,8 +1,79 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import { SearchProvider } from "../context/SearchContext";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+const SEO_BY_ROUTE = {
+  "/": {
+    title: "Marota Film and Software College | Learn Software & Film Skills",
+    description:
+      "Marota Film and Software College offers professional training in software development, film making, graphics design, web development, and digital skills in Ethiopia.",
+  },
+  "/login": {
+    title: "Sign In | Marota Film and Software College",
+    description:
+      "Sign in to your Marota account to manage your courses, profile, certificates, and learning progress.",
+  },
+  "/signup": {
+    title: "Create Account | Marota Film and Software College",
+    description:
+      "Create your Marota account and start learning software, film making, and digital skills with expert instructors.",
+  },
+  "/dashboard": {
+    title: "Student Dashboard | Marota",
+    description:
+      "Track your course applications, approvals, and progress from your Marota student dashboard.",
+  },
+  "/my-courses": {
+    title: "My Courses & Certificates | Marota",
+    description:
+      "View your enrolled courses, completion status, and certificates at Marota Film and Software College.",
+  },
+  "/profile": {
+    title: "My Profile | Marota",
+    description:
+      "Manage your Marota profile information, learning identity, and student details.",
+  },
+  "/admin": {
+    title: "Admin Dashboard | Marota",
+    description:
+      "Manage users, enrollments, and platform activity from the Marota admin dashboard.",
+  },
+};
+
+const updateMetaTag = (name, content, property = false) => {
+  if (!content) return;
+  const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+  let tag = document.querySelector(selector);
+
+  if (!tag) {
+    tag = document.createElement("meta");
+    if (property) {
+      tag.setAttribute("property", name);
+    } else {
+      tag.setAttribute("name", name);
+    }
+    document.head.appendChild(tag);
+  }
+
+  tag.setAttribute("content", content);
+};
 
 const Layout = ({ children }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const seo = SEO_BY_ROUTE[location.pathname] || SEO_BY_ROUTE["/"];
+
+    document.title = seo.title;
+    updateMetaTag("description", seo.description);
+    updateMetaTag("og:title", seo.title, true);
+    updateMetaTag("og:description", seo.description, true);
+    updateMetaTag("twitter:title", seo.title);
+    updateMetaTag("twitter:description", seo.description);
+  }, [location.pathname]);
+
   return (
     <SearchProvider>
       <Header />

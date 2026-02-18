@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Register from "../components/Register";
 import { useAuth } from "../context/AuthContext";
+import { FaTimes } from "react-icons/fa";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -14,12 +15,22 @@ export default function RegisterPage() {
   }, [user, navigate]);
 
   return (
-    <div className="mx-auto max-w-md">
-      <div className="rounded-2xl border border-[#28476b] bg-[var(--primary-light)]/90 p-8 shadow-xl backdrop-blur-sm">
-        <Register
-          onRegisterSuccess={() => {}}
-          onSwitchToLogin={() => navigate("/login")}
-        />
+    <div className="mx-auto max-w-5xl px-4">
+      <div className="min-h-[calc(100vh-8rem)] md:min-h-[calc(100vh-10rem)] flex items-start md:items-center justify-center py-6 md:py-10">
+        <div className="relative w-full max-w-md rounded-2xl border border-[#28476b] bg-[var(--primary-light)]/90 p-6 sm:p-8 shadow-xl backdrop-blur-sm">
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="btn-modal-close absolute top-3 right-3"
+            aria-label="Close sign up form"
+          >
+            <FaTimes />
+          </button>
+          <Register
+            onRegisterSuccess={() => {}}
+            onSwitchToLogin={() => navigate("/login")}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,9 +1,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import Register from "./Register";
-import Modal from "./Modal";
-import Login from "./Login";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo1.png";
 import { FaBars, FaTimes, FaSearch, FaUserCircle, FaChevronDown, FaSignOutAlt } from "react-icons/fa";
 import { useSearch } from "../context/SearchContext";
@@ -11,8 +8,6 @@ import { diplomaLevels, shortCourses } from "../data/courses";
 import { useAuth } from "../context/AuthContext";
 
  const Header = () => {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [mobileProfileMenuOpen, setMobileProfileMenuOpen] = useState(false);
@@ -92,12 +87,12 @@ import { useAuth } from "../context/AuthContext";
   };
 
   const handleSignOut = async () => {
+    navigate("/", { replace: true });
     const { error } = await signOut();
     if (error) {
       window.alert(error.message || "Unable to sign out right now.");
       return;
     }
-    window.location.href = "/";
   };
 
   const handleSignOutFromMenu = async () => {
@@ -351,13 +346,15 @@ import { useAuth } from "../context/AuthContext";
           ) : (
             <div className="hidden xl:flex items-center gap-2">
               <button
-                onClick={() => setShowLogin(true)}
+                type="button"
+                onClick={() => navigate("/login")}
                 className="bg-cyan-400 px-3 py-2 rounded-lg hover:bg-cyan-500 text-sm whitespace-nowrap"
               >
                 Sign In
               </button>
               <button
-                onClick={() => setShowRegister(true)}
+                type="button"
+                onClick={() => navigate("/signup")}
                 className="btn-signup bg-yellow-400 px-3 py-2 rounded-lg hover:bg-yellow-500 text-sm whitespace-nowrap"
               >
                 Sign Up
@@ -521,18 +518,20 @@ import { useAuth } from "../context/AuthContext";
         ) : (
           <div className="flex flex-col items-center gap-3 w-full">
             <button
+              type="button"
               onClick={() => {
-                setShowLogin(true);
                 setMenuOpen(false);
+                navigate("/login");
               }}
               className="bg-cyan-400 px-3 py-2 rounded-lg hover:bg-cyan-500 w-full"
             >
               Sign In
             </button>
             <button
+              type="button"
               onClick={() => {
-                setShowRegister(true);
                 setMenuOpen(false);
+                navigate("/signup");
               }}
               className="btn-signup bg-yellow-400 px-3 py-2 rounded-lg hover:bg-yellow-500 w-full"
             >
@@ -541,35 +540,6 @@ import { useAuth } from "../context/AuthContext";
           </div>
         )}
         </div>
-      )}
-
-      {/* Login Modal */}
-      {showLogin && (
-        <Modal onClose={() => setShowLogin(false)}>
-          <Login
-            onLoginSuccess={() => {
-              setShowLogin(false);
-              navigate("/dashboard");
-            }}
-            onSwitchToRegister={() => {
-              setShowLogin(false);
-              setShowRegister(true);
-            }}
-          />
-        </Modal>
-      )}
-
-      {/* Register Modal */}
-      {showRegister && (
-        <Modal onClose={() => setShowRegister(false)}>
-          <Register
-            onRegisterSuccess={(user) => console.log("Registered", user)}
-            onSwitchToLogin={() => {
-              setShowRegister(false);
-              setShowLogin(true);
-            }}
-          />
-        </Modal>
       )}
     </header>
   );
