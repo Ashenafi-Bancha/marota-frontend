@@ -24,7 +24,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen flex flex-col items-center justify-center ml-5 overflow-hidden">
+    <section id="home" className="relative min-h-[92vh] md:min-h-screen flex flex-col items-center justify-center overflow-hidden px-3">
 
       {/* Background images slideshow */}
       <div className="absolute inset-0 z-0 ">
@@ -44,81 +44,81 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl px-5 md:text-left w-full text-center mt-[-10px] mx-auto">
-        <h1 className="font-bold leading-tight my-2 text-4xl md:text-5xl lg:text-6xl p-2 mx-auto  text-center">
+      <div className="relative z-10 w-full max-w-7xl px-3 sm:px-5 text-center mt-2 md:mt-0 mx-auto">
+        <h1 className="font-bold leading-tight my-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl p-2 mx-auto text-center">
           Welcome to Marota Film
           <span className="text-[var(--accent-blue)]">
             {" "}
             and Software Collage </span>
         </h1>
 
-        <p className="md:text-2xl mb-2 max-w-3xl text-gray-200 leading-relaxed mx-auto px-4 py-2 ">
+        <p className="text-base sm:text-lg md:text-2xl mb-2 max-w-3xl text-gray-200 leading-relaxed mx-auto px-2 sm:px-4 py-2">
           Join our comprehensive programs in cinematography and software
           development. Learn from experts and launch your creative career.
         </p>
 
-        <div className="flex flex-wrap gap-4 justify-center mb-2 py-2">
+        <div className="flex flex-wrap gap-3 sm:gap-4 justify-center mb-2 py-2 w-full max-w-xl mx-auto">
           <a
             href="#services"
-            className="px-6 py-3 border border-[var(--accent-blue)] text-[var(--accent-blue)] md:rounded-lg rounded-3xl hover:bg-[rgba(100,255,218,0.1)] hover:translate-y-[-3px] hover:shadow-lg transition w-full sm:w-auto  text-center "
+            className="px-6 py-3 border border-[var(--accent-blue)] text-[var(--accent-blue)] md:rounded-lg rounded-3xl hover:bg-[rgba(100,255,218,0.1)] hover:translate-y-[-3px] hover:shadow-lg transition w-full sm:w-auto text-center"
           >
             Our Services
           </a>
 
           <a
             href="#portfolio"
-            className="px-6 py-3 bg-[var(--accent-blue)] text-[var(--primary-dark)] md:rounded-lg rounded-3xl hover:bg-[rgba(100,255,218,0.9)] hover:shadow-lg transition w-full sm:w-auto text-center hover:translate-y-[-3px] transition"
+            className="px-6 py-3 bg-[var(--accent-blue)] text-[var(--primary-dark)] md:rounded-lg rounded-3xl hover:bg-[rgba(100,255,218,0.9)] hover:shadow-lg transition w-full sm:w-auto text-center hover:translate-y-[-3px]"
           >
-            View Portfolio
+            View Portifolio
           </a>
         </div>
       </div>
 
       {/* Floating Animation Elements */}
-      <div className="absolute top-50 left-10 opacity-20">
+      <div className="absolute left-10 top-1/2 opacity-20 hidden md:block">
         <Code className="h-12 w-12 animate-pulse text-cyan-500" />
       </div>
-      <div className="absolute top-20 left-10 opacity-20">
+      <div className="absolute top-20 left-10 opacity-20 hidden md:block">
         <Camera className="h-12 w-12 animate-pulse" />
       </div>
-      <div className="absolute top-50 right-10 opacity-20">
+      <div className="absolute right-10 top-1/2 opacity-20 hidden md:block">
         <Camera className="h-12 w-12 animate-pulse text-cyan-500 " />
       </div>
-      <div className="absolute top-20 right-10 opacity-20">
+      <div className="absolute top-20 right-10 opacity-20 hidden md:block">
         <Code className="h-12 w-12 animate-pulse" />
       </div>
 
 
       {/* Stats Section */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-4">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10  my-2 p-4 ">
+      <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 mt-4 mb-4 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 sm:gap-6 my-2 p-2 sm:p-4">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
               <Users className="h-8 w-8 text-[var(--accent-blue)]" />
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2">500+</h3>
-            <p className="text-gray-300">Graduated Students</p>
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">500+</h3>
+            <p className="text-gray-300 text-sm sm:text-base">Graduated Students</p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
               <Camera className="h-8 w-8 text-[var(--accent-blue)]" />
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2">12</h3>
-            <p className="text-gray-300">Specialized Courses</p>
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">12</h3>
+            <p className="text-gray-300 text-sm sm:text-base">Specialized Courses</p>
           </div>
           <div className="text-center pt-2 ">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
               <Award className="h-8 w-8 text-[var(--accent-blue)]" />
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2 ">95%</h3>
-            <p className="text-gray-300">Job Placement Rate</p>
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 ">95%</h3>
+            <p className="text-gray-300 text-sm sm:text-base">Job Placement Rate</p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
               <Code className="h-8 w-8 text-[var(--accent-blue)]" />
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2">8</h3>
-            <p className="text-gray-300">Years Experience</p>
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">8</h3>
+            <p className="text-gray-300 text-sm sm:text-base">Years Experience</p>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 // src/components/Testimonials.jsx
+import { useState } from "react";
 import Samuel from "../assets/testimonials/ashenafi.jpg";
 import Amina from "../assets/testimonials/ashenafi.jpg";
 import Lidya from "../assets/testimonials/ashenafi.jpg";
@@ -46,6 +47,9 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
+  const [showAll, setShowAll] = useState(false);
+  const visibleTestimonials = showAll ? testimonials : testimonials.slice(0, 2);
+
   return (
     <section id="testimonials" className="py-24 bg-[#112240] text-white">
       <div className="max-w-7xl mx-auto px-6 text-center mb-12">
@@ -55,7 +59,7 @@ export default function Testimonials() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto">
-        {testimonials.map((t, idx) => (
+        {visibleTestimonials.map((t, idx) => (
           <div
             key={idx}
             className="bg-[#0a192f] p-6 rounded-lg shadow-lg flex flex-col items-center text-center 
@@ -75,6 +79,18 @@ export default function Testimonials() {
           </div>
         ))}
       </div>
+
+      {testimonials.length > 2 && (
+        <div className="max-w-6xl mx-auto px-6 mt-8 text-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="bg-[var(--accent-blue)] text-black px-6 py-2 rounded-md font-semibold hover:bg-teal-300 hover:text-white transition"
+          >
+            {showAll ? "View less testimonials" : "View more testimonials"}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

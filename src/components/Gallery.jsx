@@ -1,4 +1,5 @@
 // src/components/Gallery.jsx
+import { useState } from "react";
 import MemoryImage from "../assets/gallery/memory-image.png";
 import Gallery1 from "../assets/gallery/marota1.jpg";
 import Gallery2 from "../assets/gallery/marota2.jpg";
@@ -10,6 +11,7 @@ import Gallery7 from "../assets/gallery/marota7.jpg";
 import Gallery8 from "../assets/gallery/marota8.jpg";
 
 export default function Gallery() {
+  const [showAll, setShowAll] = useState(false);
   const images = [
     MemoryImage,
     Gallery1,
@@ -22,6 +24,8 @@ export default function Gallery() {
     Gallery8
   ];
 
+  const visibleImages = showAll ? images : images.slice(0, 3);
+
   return (
     <section id="gallery" className="py-24 bg-[#112240] text-white">
       <div className="max-w-7xl mx-auto px-6 text-center mb-12">
@@ -30,7 +34,7 @@ export default function Gallery() {
       </div>
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-7xl mx-auto px-6">
-        {images.map((img, idx) => (
+        {visibleImages.map((img, idx) => (
           <div key={idx} className="overflow-hidden rounded-lg shadow-lg">
             <img
               src={img}
@@ -40,6 +44,18 @@ export default function Gallery() {
           </div>
         ))}
       </div>
+
+      {images.length > 3 && (
+        <div className="max-w-7xl mx-auto px-6 mt-8 text-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="bg-[var(--accent-blue)] text-black px-6 py-2 rounded-md font-semibold hover:bg-teal-300 hover:text-white transition"
+          >
+            {showAll ? "View less gallery" : "View more gallery"}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

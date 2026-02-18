@@ -1,4 +1,5 @@
 // src/components/Instructors.jsx
+import { useState } from "react";
 import Mathewos from "../assets/instructors/Ermias.jpg";
 import Lidya from "../assets/instructors/Lidya.jpg";
 import Eyonadab from "../assets/instructors/eyonadab.jpg";
@@ -21,6 +22,9 @@ const instructors = [
 ];
 
 export default function Instructors() {
+  const [showAll, setShowAll] = useState(false);
+  const visibleInstructors = showAll ? instructors : instructors.slice(0, 3);
+
   return (
     <section id="instructors" className="py-24 bg-[#112240] text-white">
       <div className="max-w-7xl mx-auto px-6 text-center mb-12">
@@ -29,7 +33,7 @@ export default function Instructors() {
       </div>
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-7xl mx-auto px-6">
-        {instructors.map((inst, idx) => (
+        {visibleInstructors.map((inst, idx) => (
           <div
             key={idx}
             className="bg-[#00192f] rounded-lg p-6 text-center shadow-lg hover:scale-105 transition hover:shadow-2xl hover:border hover:border-[var(--accent-blue)] hover:border-2"
@@ -66,6 +70,18 @@ export default function Instructors() {
           </div>
         ))}
       </div>
+
+      {instructors.length > 3 && (
+        <div className="max-w-7xl mx-auto px-6 mt-8 text-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="bg-[var(--accent-blue)] text-black px-6 py-2 rounded-md font-semibold hover:bg-teal-300 hover:text-white transition"
+          >
+            {showAll ? "View less instructors" : "View more instructors"}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

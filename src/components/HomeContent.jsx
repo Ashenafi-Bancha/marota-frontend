@@ -1,6 +1,3 @@
-
-import { useState } from "react";
-
 import Hero from "./Home";
 import About from "./About";
 import Services from "./Services";
@@ -11,25 +8,16 @@ import Testimonials from "./Testimonials";
 import Contact from "./Contact";
 
 export default function HomeContent() {
-
-  const [showLogin, setShowLogin] = useState(false);
-    const [showRegister, setShowRegister] = useState(false);
   return (
-    <>
-      <Hero 
-      onSignIn={() => setShowLogin(true)}
-        onSignUp={() => setShowRegister(true)}
-      />
-      <About />
+    <div className="space-y-16 md:space-y-20 pb-16 md:pb-24">
+      <Hero />
       <Services />
       <Instructors />
+      <About />
       <Portfolio />
       <Gallery />
       <Testimonials />
       <Contact />
-
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
-            {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
-    </>
+    </div>
   );
 }

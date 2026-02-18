@@ -1,6 +1,6 @@
 // src/components/Login.jsx
 import { useState } from "react";
-import axios from "axios";
+import { supabase } from "../lib/supabaseClient";
 import { FaEye, FaEyeSlash, FaEnvelope, FaLock } from "react-icons/fa";
 
 export default function Login({ onLoginSuccess, onSwitchToRegister }) {
@@ -8,52 +8,86 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
-    if (!email.trim()) {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail) {
       newErrors.email = "Email is required";
-    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/.test(trimmedEmail)) {
       newErrors.email = "Invalid email format";
     }
-    if (!password.trim()) {
+
+    if (!trimmedPassword) {
       newErrors.password = "Password is required";
-    } else if (password.length < 6) {
+    } else if (trimmedPassword.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
     if (!validateForm()) return;
 
+    setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
-        email,
-        password,
+      console.log("Attempting login with Supabase...");
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
       });
-      onLoginSuccess(res.data.user);
-      localStorage.setItem("token", res.data.token);
+
+      console.log("Login response:", data);
+      console.log("Login error:", error);
+
+      if (error) {
+        setErrors({ form: error.message });
+        return;
+      }
+
+      if (!data?.user) {
+        setErrors({ form: "Login failed. Please check your credentials." });
+        return;
+      }
+
+      if (onLoginSuccess) {
+        onLoginSuccess(data.user);
+      }
     } catch (err) {
-      alert(err.response?.data?.msg || "Login failed");
+      console.error("Unexpected login error:", err);
+      setErrors({ form: err.message || "Login failed" });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full space-y-6"
-    >
-      <h2 className="text-3xl font-bold text-center text-white">Sign In</h2>
-      <p className="text-gray-300 text-center">Welcome back! Please enter your details</p>
+    <form onSubmit={handleSubmit} className="w-full space-y-5">
+      <div className="space-y-2 text-center">
+        <h2 className="text-3xl font-bold text-white">Sign In</h2>
+        <p className="text-sm text-[var(--text-lighter)]">
+          Welcome back. Enter your account details to continue.
+        </p>
+      </div>
 
-      {/* Email */}
+      {errors.form && (
+        <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          {errors.form}
+        </div>
+      )}
+
       <div>
-        <label className="block text-gray-300 mb-2 text-sm">Email</label>
+        <label className="mb-2 block text-sm font-medium text-[var(--text-light)]">Email</label>
         <div className="relative">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[var(--text-lighter)]">
             <FaEnvelope />
           </span>
           <input
@@ -61,19 +95,22 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`w-full pl-10 px-4 py-3 rounded-lg bg-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition ${
-              errors.email ? "focus:ring-red-500" : ""
+            className={`w-full rounded-xl border bg-[var(--primary-dark)] py-3 pl-10 pr-4 text-white placeholder:text-[var(--text-lighter)] focus:outline-none focus:ring-2 transition ${
+              errors.email
+                ? "border-red-500/60 focus:ring-red-500/50"
+                : "border-[#28476b] focus:ring-[var(--accent-blue)]/50"
             }`}
+            required
+            autoComplete="email"
           />
         </div>
         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
       </div>
 
-      {/* Password */}
       <div>
-        <label className="block text-gray-300 mb-2 text-sm">Password</label>
+        <label className="mb-2 block text-sm font-medium text-[var(--text-light)]">Password</label>
         <div className="relative">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[var(--text-lighter)]">
             <FaLock />
           </span>
           <input
@@ -81,14 +118,19 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={`w-full pl-10 pr-10 px-4 py-3 rounded-lg bg-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition ${
-              errors.password ? "focus:ring-red-500" : ""
+            className={`w-full rounded-xl border bg-[var(--primary-dark)] py-3 pl-10 pr-10 text-white placeholder:text-[var(--text-lighter)] focus:outline-none focus:ring-2 transition ${
+              errors.password
+                ? "border-red-500/60 focus:ring-red-500/50"
+                : "border-[#28476b] focus:ring-[var(--accent-blue)]/50"
             }`}
+            required
+            autoComplete="current-password"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200"
+            className="btn-icon absolute inset-y-0 right-0 flex items-center pr-3 text-[var(--text-lighter)] hover:text-white"
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
@@ -96,21 +138,20 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
       </div>
 
-      {/* Submit */}
       <button
         type="submit"
-        className="w-full bg-cyan-400 text-white py-3 rounded-full font-semibold hover:bg-cyan-500 transition duration-300 shadow-md"
+        disabled={loading}
+        className="btn-auth w-full py-3 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Sign In
+        {loading ? "Signing in..." : "Sign In"}
       </button>
 
-      {/* Switch to Register */}
-      <div className="text-center text-gray-400 text-sm">
+      <div className="text-center text-sm text-[var(--text-lighter)]">
         Don’t have an account?{" "}
         <button
           type="button"
           onClick={onSwitchToRegister}
-          className="text-cyan-400 hover:text-cyan-500 font-medium transition"
+          className="btn-link font-medium transition"
         >
           Create account
         </button>
