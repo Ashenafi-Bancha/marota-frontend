@@ -14,10 +14,10 @@ import Modal from "./Modal";
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [mobileProfileMenuOpen, setMobileProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
+  const mobileProfilePanelRef = useRef(null);
   const { searchQuery, setSearchQuery } = useSearch();
   const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
@@ -79,7 +79,6 @@ import Modal from "./Modal";
 
   const handleCourseSelect = (title) => {
     setSearchQuery(title);
-    setMobileSearchOpen(false);
     const target = document.getElementById("services");
     if (target) {
     target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -90,10 +89,12 @@ import Modal from "./Modal";
     setMenuOpen(false);
     setProfileMenuOpen(false);
     setMobileProfileMenuOpen(false);
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     navigate(path);
   };
 
   const handleSignOut = async () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     navigate("/", { replace: true });
     const { error } = await signOut();
     if (error) {
@@ -176,7 +177,6 @@ import Modal from "./Modal";
   useEffect(() => {
     setProfileMenuOpen(false);
     setMobileProfileMenuOpen(false);
-    setMobileSearchOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -191,6 +191,15 @@ import Modal from "./Modal";
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (menuOpen && mobileProfileMenuOpen && mobileProfilePanelRef.current) {
+      mobileProfilePanelRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [menuOpen, mobileProfileMenuOpen]);
+
   return (
     <header className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#081325]/85 text-white shadow-[0_10px_30px_rgba(2,8,23,0.35)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-2 px-3 py-3 lg:px-5">
@@ -202,45 +211,22 @@ import Modal from "./Modal";
         </div>
 
         <div className="xl:hidden flex-1 flex justify-center px-2 relative">
-          {!mobileSearchOpen ? (
-            <button
-              type="button"
-              onClick={() => setMobileSearchOpen(true)}
-              className="h-9 w-9 inline-flex items-center justify-center rounded-full border border-slate-600 bg-[#0f2240] text-gray-200"
-              aria-label="Open search"
-            >
-              <FaSearch />
-            </button>
-          ) : (
-            <form
-              className="flex w-full max-w-[220px] items-center rounded-full border border-slate-600 bg-[#0f2240] px-3 py-1.5"
-              onSubmit={handleSearchSubmit}
-            >
-              <FaSearch className="text-gray-300 mr-2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search..."
-                className="no-focus-ring bg-transparent outline-none px-1 py-1 text-sm text-gray-100 w-full placeholder:text-gray-400"
-                aria-label="Search courses"
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileSearchOpen(false);
-                  setSearchQuery("");
-                }}
-                className="h-7 w-7 inline-flex items-center justify-center rounded-full text-gray-300"
-                aria-label="Close search"
-              >
-                <FaTimes className="text-sm" />
-              </button>
-            </form>
-          )}
+          <form
+            className="flex w-full max-w-[220px] items-center rounded-full border border-slate-600 bg-[#0f2240] px-3 py-1.5"
+            onSubmit={handleSearchSubmit}
+          >
+            <FaSearch className="text-gray-300 mr-2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
+              className="no-focus-ring bg-transparent outline-none px-1 py-1 text-sm text-gray-100 w-full placeholder:text-gray-400"
+              aria-label="Search courses"
+            />
+          </form>
 
-          {mobileSearchOpen && normalizedQuery && (
+          {normalizedQuery && (
             <div className="absolute top-11 left-1/2 -translate-x-1/2 w-[min(84vw,320px)] rounded-xl bg-gray-800 border border-gray-700 shadow-xl overflow-hidden z-[70]">
               {courseResults.length === 0 ? (
                 <div className="px-4 py-3 text-sm text-gray-300">No matching courses.</div>
@@ -452,7 +438,7 @@ import Modal from "./Modal";
 
       {/* Mobile Nav */}
       {menuOpen && (
-        <div className="xl:hidden flex flex-col items-stretch gap-4 border-t border-white/10 bg-[#0d1f3c]/95 px-4 py-4 backdrop-blur-md">
+        <div className="xl:hidden flex max-h-[calc(100vh-7.5rem)] overflow-y-auto flex-col items-stretch gap-4 border-t border-white/10 bg-[#0d1f3c]/95 px-4 py-4 pb-6 backdrop-blur-md">
           {["Home", "About", "Services", "Portfolio", "Gallery", "Instructors", "Contact"].map(
             (item) => {
               const sectionId = item.toLowerCase();
@@ -519,7 +505,10 @@ import Modal from "./Modal";
             </button>
 
             {mobileProfileMenuOpen && (
-              <div className="w-full rounded-xl border border-slate-700 bg-[#0f2240] p-2">
+              <div
+                ref={mobileProfilePanelRef}
+                className="w-full rounded-xl border border-slate-700 bg-[#0f2240] p-2 max-h-[40vh] overflow-y-auto"
+              >
                 <div className="px-3 py-2 border-b border-slate-700/70 mb-1">
                   <p className="text-sm font-semibold text-white truncate">{profileLabel}</p>
                   <p className="text-xs text-gray-400 truncate">{user?.email || ""}</p>
