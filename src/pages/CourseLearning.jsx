@@ -30,6 +30,7 @@ export default function CourseLearning() {
   const [tests, setTests] = useState([]);
   const [progressMap, setProgressMap] = useState({});
   const [savingLessonId, setSavingLessonId] = useState(null);
+  const [selectedLessonId, setSelectedLessonId] = useState(null);
 
   const fetchLearningContent = useCallback(async () => {
     if (!user || !decodedCourseKey) {
@@ -198,6 +199,28 @@ export default function CourseLearning() {
     [allLessons.length, completedLessons]
   );
 
+  useEffect(() => {
+    if (!allLessons.length) {
+      setSelectedLessonId(null);
+      return;
+    }
+
+    const selectedStillExists = allLessons.some((lesson) => lesson.id === selectedLessonId);
+    if (!selectedStillExists) {
+      setSelectedLessonId(allLessons[0].id);
+    }
+  }, [allLessons, selectedLessonId]);
+
+  const selectedLesson = useMemo(
+    () => allLessons.find((lesson) => lesson.id === selectedLessonId) || null,
+    [allLessons, selectedLessonId]
+  );
+
+  const selectedModule = useMemo(() => {
+    if (!selectedLesson) return null;
+    return modules.find((module) => module.id === selectedLesson.module_id) || null;
+  }, [modules, selectedLesson]);
+
   const hasCurriculum =
     modules.length > 0 || quizzes.length > 0 || projects.length > 0 || tests.length > 0;
 
@@ -327,12 +350,19 @@ export default function CourseLearning() {
         </div>
       ) : (
         <>
-          <div className="bg-gray-800 rounded-2xl p-5 mb-6">
-            <p className="text-sm text-gray-400">Course completion</p>
-            <p className="text-3xl font-semibold text-white">{completionPercent}%</p>
-            <p className="text-sm text-gray-300 mt-1">
-              {completedLessons} of {allLessons.length} lessons completed
-            </p>
+          <div className="bg-gray-800 rounded-2xl p-5 mb-6 border border-gray-700">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+              <div>
+                <p className="text-sm text-gray-400">Course completion</p>
+                <p className="text-3xl font-semibold text-white">{completionPercent}%</p>
+                <p className="text-sm text-gray-300 mt-1">
+                  {completedLessons} of {allLessons.length} lessons completed
+                </p>
+              </div>
+              <div className="text-sm text-gray-300">
+                {modules.length} modules • {allLessons.length} lessons
+              </div>
+            </div>
             <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden mt-3">
               <div
                 className="h-full bg-cyan-400"
@@ -345,208 +375,205 @@ export default function CourseLearning() {
             <p className="text-sm text-red-400 mb-5">{statusMessage}</p>
           )}
 
-          <div className="space-y-5">
-            {modules.map((module) => {
-              const moduleLessons = lessonsByModule[module.id] || [];
+          <div className="grid lg:grid-cols-12 gap-6">
+            <aside className="lg:col-span-4 bg-gray-800 rounded-2xl border border-gray-700 p-4 h-fit">
+              <h2 className="text-lg font-semibold text-white">Curriculum</h2>
+              <p className="text-xs text-gray-400 mt-1">Select a lesson to continue learning.</p>
 
-              return (
-                <article key={module.id} className="bg-gray-800 rounded-2xl p-5">
-                  <h2 className="text-xl font-semibold text-white">{module.title}</h2>
-                  <p className="text-sm text-gray-300 mt-1">{module.description}</p>
+              <div className="mt-4 space-y-4 max-h-[70vh] overflow-auto pr-1">
+                {modules.map((module) => {
+                  const moduleLessons = lessonsByModule[module.id] || [];
+                  const moduleCompleted = moduleLessons.filter((lesson) => progressMap[lesson.id]).length;
 
-                  <div className="mt-4 grid gap-3">
-                    {moduleLessons.length === 0 ? (
-                      <p className="text-sm text-gray-400">No lessons added yet.</p>
-                    ) : (
-                      moduleLessons.map((lesson) => {
-                        const completed = Boolean(progressMap[lesson.id]);
-                        return (
-                          <div
-                            key={lesson.id}
-                            className="border border-gray-700 rounded-xl p-4 bg-gray-900"
-                          >
-                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                              <div>
-                                <h3 className="text-base font-semibold text-white">
-                                  {lesson.title}
-                                </h3>
-                                <p className="text-sm text-gray-300 mt-1">{lesson.summary}</p>
-                              </div>
+                  return (
+                    <div key={module.id} className="bg-gray-900 border border-gray-700 rounded-xl p-3">
+                      <h3 className="text-sm font-semibold text-white">{module.title}</h3>
+                      <p className="text-xs text-gray-400 mt-1">{moduleCompleted}/{moduleLessons.length} completed</p>
+
+                      <div className="mt-3 space-y-2">
+                        {moduleLessons.length === 0 ? (
+                          <p className="text-xs text-gray-500">No lessons yet.</p>
+                        ) : (
+                          moduleLessons.map((lesson, lessonIndex) => {
+                            const completed = Boolean(progressMap[lesson.id]);
+                            const selected = selectedLessonId === lesson.id;
+
+                            return (
                               <button
+                                key={lesson.id}
                                 type="button"
-                                disabled={savingLessonId === lesson.id}
-                                onClick={() => toggleLessonCompletion(lesson.id)}
-                                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap ${
-                                  completed
-                                    ? "bg-green-600 text-white hover:bg-green-500"
-                                    : "bg-cyan-500 text-white hover:bg-cyan-400"
-                                } disabled:opacity-60 disabled:cursor-not-allowed`}
+                                onClick={() => setSelectedLessonId(lesson.id)}
+                                className={`w-full text-left px-3 py-2 rounded-lg border transition ${
+                                  selected
+                                    ? "bg-cyan-500/20 border-cyan-400 text-cyan-100"
+                                    : "bg-gray-800 border-gray-700 text-gray-200 hover:border-gray-500"
+                                }`}
                               >
-                                {savingLessonId === lesson.id
-                                  ? "Saving..."
-                                  : completed
-                                  ? "Completed"
-                                  : "Mark Complete"}
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs font-medium">
+                                    {lessonIndex + 1}. {lesson.title}
+                                  </span>
+                                  {completed && <span className="text-[10px] text-green-300">Done</span>}
+                                </div>
                               </button>
-                            </div>
-                            <div className="mt-3 flex flex-wrap gap-3 text-sm">
-                              {lesson.video_url && (
-                                <a
-                                  href={lesson.video_url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-cyan-300 hover:text-cyan-200"
-                                >
-                                  Watch video
-                                </a>
-                              )}
-                              {lesson.documentation_url && (
-                                <a
-                                  href={lesson.documentation_url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-cyan-300 hover:text-cyan-200"
-                                >
-                                  Read documentation
-                                </a>
-                              )}
-                              {lesson.external_review_url && (
-                                <a
-                                  href={lesson.external_review_url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-cyan-300 hover:text-cyan-200"
-                                >
-                                  Review resource
-                                </a>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-
-          <div className="mt-7 grid md:grid-cols-3 gap-4">
-            <div className="bg-gray-800 rounded-2xl p-5">
-              <h3 className="text-lg font-semibold text-white">Quiz</h3>
-              {quizzes.length === 0 ? (
-                <p className="text-sm text-gray-400 mt-2">No quiz published yet.</p>
-              ) : (
-                quizzes.map((quiz) => (
-                  <div key={quiz.id} className="mt-2 text-sm text-gray-200">
-                    <p className="font-medium">{quiz.title}</p>
-                    <p className="text-gray-400">{quiz.description}</p>
-                    <p className="text-gray-400">
-                      {quiz.question_count} questions • Pass score {quiz.pass_score}%
-                    </p>
-                    <div className="mt-1 flex flex-wrap gap-3">
-                      {quiz.quiz_url && (
-                        <a
-                          href={quiz.quiz_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-cyan-300 hover:text-cyan-200"
-                        >
-                          Start quiz
-                        </a>
-                      )}
-                      {quiz.review_url && (
-                        <a
-                          href={quiz.review_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-cyan-300 hover:text-cyan-200"
-                        >
-                          Review guide
-                        </a>
-                      )}
+                            );
+                          })
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
+                  );
+                })}
+              </div>
+            </aside>
 
-            <div className="bg-gray-800 rounded-2xl p-5">
-              <h3 className="text-lg font-semibold text-white">Project</h3>
-              {projects.length === 0 ? (
-                <p className="text-sm text-gray-400 mt-2">No project published yet.</p>
-              ) : (
-                projects.map((project) => (
-                  <div key={project.id} className="mt-2 text-sm text-gray-200">
-                    <p className="font-medium">{project.title}</p>
-                    <p className="text-gray-400">{project.description}</p>
-                    <p className="text-gray-400">{project.submission_instruction}</p>
-                    <div className="mt-1 flex flex-wrap gap-3">
-                      {project.project_brief_url && (
+            <main className="lg:col-span-8 space-y-6">
+              <section className="bg-gray-800 rounded-2xl border border-gray-700 p-5">
+                {selectedLesson ? (
+                  <>
+                    <p className="text-xs text-cyan-300 mb-2">{selectedModule?.title || "Module"}</p>
+                    <h2 className="text-2xl font-semibold text-white">{selectedLesson.title}</h2>
+                    <p className="text-gray-300 mt-2">{selectedLesson.summary}</p>
+
+                    <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                      {selectedLesson.video_url && (
                         <a
-                          href={project.project_brief_url}
+                          href={selectedLesson.video_url}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-cyan-300 hover:text-cyan-200"
+                          className="px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 text-cyan-300 hover:text-cyan-200"
                         >
-                          Project brief
+                          Watch video
                         </a>
                       )}
-                      {project.review_url && (
+                      {selectedLesson.documentation_url && (
                         <a
-                          href={project.review_url}
+                          href={selectedLesson.documentation_url}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-cyan-300 hover:text-cyan-200"
+                          className="px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 text-cyan-300 hover:text-cyan-200"
+                        >
+                          Read documentation
+                        </a>
+                      )}
+                      {selectedLesson.external_review_url && (
+                        <a
+                          href={selectedLesson.external_review_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 text-cyan-300 hover:text-cyan-200"
                         >
                           Review resource
                         </a>
                       )}
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
 
-            <div className="bg-gray-800 rounded-2xl p-5">
-              <h3 className="text-lg font-semibold text-white">Final Test</h3>
-              {tests.length === 0 ? (
-                <p className="text-sm text-gray-400 mt-2">No final test published yet.</p>
-              ) : (
-                tests.map((test) => (
-                  <div key={test.id} className="mt-2 text-sm text-gray-200">
-                    <p className="font-medium">{test.title}</p>
-                    <p className="text-gray-400">{test.description}</p>
-                    <p className="text-gray-400">
-                      {test.duration_minutes ? `${test.duration_minutes} min • ` : ""}
-                      Pass score {test.pass_score}%
-                    </p>
-                    <div className="mt-1 flex flex-wrap gap-3">
-                      {test.test_guide_url && (
-                        <a
-                          href={test.test_guide_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-cyan-300 hover:text-cyan-200"
-                        >
-                          Open test
-                        </a>
-                      )}
-                      {test.review_url && (
-                        <a
-                          href={test.review_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-cyan-300 hover:text-cyan-200"
-                        >
-                          Review guide
-                        </a>
-                      )}
+                    <div className="mt-5">
+                      <button
+                        type="button"
+                        disabled={savingLessonId === selectedLesson.id}
+                        onClick={() => toggleLessonCompletion(selectedLesson.id)}
+                        className={`px-4 py-2 rounded-full text-xs font-semibold ${
+                          progressMap[selectedLesson.id]
+                            ? "bg-green-600 text-white hover:bg-green-500"
+                            : "bg-cyan-500 text-white hover:bg-cyan-400"
+                        } disabled:opacity-60 disabled:cursor-not-allowed`}
+                      >
+                        {savingLessonId === selectedLesson.id
+                          ? "Saving..."
+                          : progressMap[selectedLesson.id]
+                          ? "Completed"
+                          : "Mark Complete"}
+                      </button>
                     </div>
+                  </>
+                ) : (
+                  <p className="text-gray-300">Select a lesson from the curriculum to begin.</p>
+                )}
+              </section>
+
+              <section className="bg-gray-800 rounded-2xl border border-gray-700 p-5">
+                <h3 className="text-lg font-semibold text-white mb-3">Assessments</h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-gray-900 border border-gray-700 rounded-xl p-4">
+                    <h4 className="text-sm font-semibold text-white">Quizzes</h4>
+                    {quizzes.length === 0 ? (
+                      <p className="text-xs text-gray-400 mt-2">No quiz published yet.</p>
+                    ) : (
+                      quizzes.map((quiz) => (
+                        <div key={quiz.id} className="mt-3 text-xs text-gray-300 space-y-1">
+                          <p className="font-medium text-gray-100">{quiz.title}</p>
+                          <p>{quiz.question_count} questions • Pass {quiz.pass_score}%</p>
+                          <div className="flex flex-wrap gap-2">
+                            {quiz.quiz_url && (
+                              <a href={quiz.quiz_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-200">
+                                Open
+                              </a>
+                            )}
+                            {quiz.review_url && (
+                              <a href={quiz.review_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-200">
+                                Review
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
-                ))
-              )}
-            </div>
+
+                  <div className="bg-gray-900 border border-gray-700 rounded-xl p-4">
+                    <h4 className="text-sm font-semibold text-white">Projects</h4>
+                    {projects.length === 0 ? (
+                      <p className="text-xs text-gray-400 mt-2">No project published yet.</p>
+                    ) : (
+                      projects.map((project) => (
+                        <div key={project.id} className="mt-3 text-xs text-gray-300 space-y-1">
+                          <p className="font-medium text-gray-100">{project.title}</p>
+                          <p>{project.description}</p>
+                          <div className="flex flex-wrap gap-2">
+                            {project.project_brief_url && (
+                              <a href={project.project_brief_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-200">
+                                Brief
+                              </a>
+                            )}
+                            {project.review_url && (
+                              <a href={project.review_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-200">
+                                Review
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  <div className="bg-gray-900 border border-gray-700 rounded-xl p-4">
+                    <h4 className="text-sm font-semibold text-white">Tests</h4>
+                    {tests.length === 0 ? (
+                      <p className="text-xs text-gray-400 mt-2">No final test published yet.</p>
+                    ) : (
+                      tests.map((test) => (
+                        <div key={test.id} className="mt-3 text-xs text-gray-300 space-y-1">
+                          <p className="font-medium text-gray-100">{test.title}</p>
+                          <p>{test.duration_minutes ? `${test.duration_minutes} min • ` : ""}Pass {test.pass_score}%</p>
+                          <div className="flex flex-wrap gap-2">
+                            {test.test_guide_url && (
+                              <a href={test.test_guide_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-200">
+                                Open
+                              </a>
+                            )}
+                            {test.review_url && (
+                              <a href={test.review_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:text-cyan-200">
+                                Review
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </section>
+            </main>
           </div>
         </>
       )}
