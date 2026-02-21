@@ -22,6 +22,13 @@ import {
   buildCourseIdentity,
   normalizeCourseIdentity,
 } from "../utils/courseIdentity";
+import cameraFemaleImage from "../assets/camera-female.jpg";
+import cameraMaleImage from "../assets/camera-male.jpg";
+import cameraMenImage from "../assets/camera-men.jpg";
+import cameraImage from "../assets/camera.jpg";
+import graphicsDesignerImage from "../assets/graphics-designer.jpg";
+import programmerImage from "../assets/programmer.jpg";
+import pcUsersGroupImage from "../assets/pc-users-group.jpg";
 
 const iconMap = {
   network: <FaNetworkWired className="text-4xl text-[#ff6b6b]" />,
@@ -31,6 +38,45 @@ const iconMap = {
   laptop: <FaLaptop className="text-4xl text-[#4a90e2]" />,
   paint: <FaPaintBrush className="text-4xl text-[#ff9f1c]" />,
   pen: <FaPenNib className="text-4xl text-[#f72585]" />,
+};
+
+const getCourseImage = (course) => {
+  const title = String(course.title || "").toLowerCase();
+
+  if (title.includes("videography") || title.includes("photography")) {
+    return cameraMenImage;
+  }
+
+  if (title.includes("video and photo editing")) {
+    return cameraImage;
+  }
+
+  if (title.includes("graphic")) {
+    return graphicsDesignerImage;
+  }
+
+  if (title.includes("basic computer")) {
+    return pcUsersGroupImage;
+  }
+
+  if (title.includes("hardware") || title.includes("network")) {
+    return pcUsersGroupImage;
+  }
+
+  if (title.includes("ai") || title.includes("machine learning")) {
+    return programmerImage;
+  }
+
+  if (title.includes("programming") || title.includes("website") || title.includes("web")) {
+    return programmerImage;
+  }
+
+  if (course.iconName === "video") return cameraMaleImage;
+  if (course.iconName === "paint" || course.iconName === "pen") return graphicsDesignerImage;
+  if (course.iconName === "code" || course.iconName === "database") return programmerImage;
+  if (course.iconName === "network" || course.iconName === "laptop") return pcUsersGroupImage;
+
+  return cameraFemaleImage;
 };
 
 const CourseCard = ({
@@ -44,6 +90,7 @@ const CourseCard = ({
   curriculumStatus,
 }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const courseImage = getCourseImage(course);
   const visibleRating = userRating || Math.round(aggregateRating?.average || 0);
   const previewTools = (course.tools || []).slice(0, 4);
   const isApproved = enrollmentStatus === "approved";
@@ -52,6 +99,16 @@ const CourseCard = ({
 
   return (
     <article className="group h-full bg-[#112240]/90 rounded-2xl p-5 md:p-6 border border-[#1f3b5b] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-[var(--accent-blue)]">
+      <div className="relative mb-4 rounded-xl overflow-hidden border border-[#1f3b5b]">
+        <img
+          src={courseImage}
+          alt={`${course.title} course`}
+          className="w-full h-40 object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#020817]/90 via-[#020817]/35 to-transparent" />
+      </div>
+
       <div className="flex flex-col items-center justify-center gap-3 text-center">
         <div className="w-14 h-14 rounded-2xl bg-[#0a192f] border border-[#1f3b5b] flex items-center justify-center shrink-0">
           {iconMap[course.iconName] || <FaCode className="text-3xl text-[var(--accent-blue)]" />}

@@ -20,9 +20,18 @@ export const diplomaLevels = [
         iconName: "network",
       },
       {
-        title: "Film Making",
-        description: "Learn scripting, storyboarding, and shooting techniques.",
-        tools: ["Storyboarding", "Shot Composition", "Lighting Setup"],
+        title: "Videography and Photography",
+        description:
+          "Build foundational camera and visual storytelling skills, including framing, lighting, and basic production workflow.",
+        tools: [
+          "Camera Parts and Setup",
+          "Exposure Triangle Basics",
+          "Shot Composition and Framing",
+          "Natural and Basic Studio Lighting",
+          "Storyboarding for Short Shoots",
+          "Basic Audio Capture",
+          "Introduction to Photo and Video Workflow",
+        ],
         iconName: "video",
       },
       {
@@ -67,9 +76,18 @@ export const diplomaLevels = [
         iconName: "network",
       },
       {
-        title: "Film Making",
-        description: "Learn scripting, storyboarding, and shooting techniques.",
-        tools: ["Storyboarding", "Shot Composition", "Lighting Setup"],
+        title: "Videography and Photography",
+        description:
+          "Develop intermediate production skills for event coverage, interviews, and creative visual content.",
+        tools: [
+          "Manual Camera Controls",
+          "Portrait and Event Photography",
+          "Interview and Documentary Shooting",
+          "Three-Point Lighting Setup",
+          "Camera Movement Techniques",
+          "Location Sound Basics",
+          "Media Organization and Backup",
+        ],
         iconName: "video",
       },
       {
@@ -109,9 +127,18 @@ export const diplomaLevels = [
         iconName: "network",
       },
       {
-        title: "Film Making",
-        description: "Learn scripting, storyboarding, and shooting techniques.",
-        tools: ["Storyboarding", "Shot Composition", "Lighting Setup"],
+        title: "Videography and Photography",
+        description:
+          "Advance into cinematic production, directing visuals, and producing high-quality edits for digital platforms.",
+        tools: [
+          "Advanced Composition and Visual Language",
+          "Cinematic Lighting Techniques",
+          "Directing Camera and Talent",
+          "Commercial and Product Videography",
+          "Photo Editing Workflow",
+          "Video Editing and Color Correction",
+          "Motion Graphics Basics",
+        ],
         iconName: "video",
       },
       {
@@ -151,14 +178,17 @@ export const diplomaLevels = [
         iconName: "network",
       },
       {
-        title: "Film Making",
-        description: "Master advanced techniques in film production.",
+        title: "Videography and Photography",
+        description:
+          "Master professional production standards for branded storytelling, studio work, and post-production delivery.",
         tools: [
-          "Lighting Techniques",
-          "Sound Design",
-          "Color Grading",
-          "Drone Filming",
-          "Visual Effects",
+          "Studio and On-Location Production",
+          "Advanced Sound Recording",
+          "Color Grading and Look Development",
+          "Drone and Aerial Cinematography",
+          "Multi-Camera Production",
+          "Visual Effects Integration",
+          "Client-Based Content Delivery",
         ],
         iconName: "video",
       },
@@ -200,14 +230,17 @@ export const diplomaLevels = [
         iconName: "network",
       },
       {
-        title: "Film Making",
-        description: "Master advanced techniques in film production.",
+        title: "Videography and Photography",
+        description:
+          "Lead end-to-end professional media projects, from concept and budgeting to final delivery and portfolio development.",
         tools: [
-          "Lighting Techniques",
-          "Sound Design",
-          "Color Grading",
-          "Drone Filming",
-          "Visual Effects",
+          "Creative Direction and Production Planning",
+          "Project Budgeting and Scheduling",
+          "Advanced Post-Production Pipeline",
+          "Brand and Campaign Videography",
+          "Portfolio Development",
+          "Client Communication and Revisions",
+          "Media Team Workflow and Leadership",
         ],
         iconName: "video",
       },
