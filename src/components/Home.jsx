@@ -45,6 +45,21 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl px-3 sm:px-5 text-center mt-2 md:mt-0 mx-auto">
+        <div className="mb-5 flex justify-center">
+          <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:gap-3 rounded-2xl border border-yellow-300/60 bg-[#0b1d36]/90 px-5 py-3 sm:px-6 sm:py-4 shadow-[0_0_35px_rgba(250,204,21,0.2)] animate-pulse">
+            <span className="inline-flex items-center gap-2 rounded-full bg-yellow-400 px-3.5 py-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#0a192f]">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0a192f] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0a192f]"></span>
+              </span>
+              Big Update
+            </span>
+            <p className="text-base sm:text-lg md:text-2xl font-bold text-white text-center sm:text-left leading-snug">
+              <span className="text-yellow-300">Coming Soon:</span> New Marota Branch in <span className="text-[var(--accent-blue)]">Addis Ababa</span>
+            </p>
+          </div>
+        </div>
+
         <h1 className="font-bold leading-tight my-2 text-3xl sm:text-4xl md:text-5xl lg:text-6xl p-2 mx-auto text-center">
           Welcome to Marota Film
           <span className="text-[var(--accent-blue)]">

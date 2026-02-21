@@ -22,13 +22,6 @@ import {
   buildCourseIdentity,
   normalizeCourseIdentity,
 } from "../utils/courseIdentity";
-import cameraFemaleImage from "../assets/camera-female.jpg";
-import cameraMaleImage from "../assets/camera-male.jpg";
-import cameraMenImage from "../assets/camera-men.jpg";
-import cameraImage from "../assets/camera.jpg";
-import graphicsDesignerImage from "../assets/graphics-designer.jpg";
-import programmerImage from "../assets/programmer.jpg";
-import pcUsersGroupImage from "../assets/pc-users-group.jpg";
 
 const iconMap = {
   network: <FaNetworkWired className="text-4xl text-[#ff6b6b]" />,
@@ -40,43 +33,72 @@ const iconMap = {
   pen: <FaPenNib className="text-4xl text-[#f72585]" />,
 };
 
+const COURSE_IMAGE_URLS = {
+  "videography and photography":
+    "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=80",
+  "video and photo editing":
+    "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1400&q=80",
+  "graphics design":
+    "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80",
+  "basic computer skills":
+    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80",
+  "hardware and software maintenance and network service":
+    "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1400&q=80",
+  "ai and machine learning":
+    "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1400&q=80",
+  "programming languages":
+    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1400&q=80",
+  "website design and development":
+    "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=1400&q=80",
+  "hardware and network servicing":
+    "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1400&q=80",
+  "videography and photography level 1":
+    "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1400&q=80",
+  "web development and database administration":
+    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=80",
+};
+
 const getCourseImage = (course) => {
   const title = String(course.title || "").toLowerCase();
 
+  if (COURSE_IMAGE_URLS[title]) {
+    return COURSE_IMAGE_URLS[title];
+  }
+
   if (title.includes("videography") || title.includes("photography")) {
-    return cameraMenImage;
+    return "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=80";
   }
 
   if (title.includes("video and photo editing")) {
-    return cameraImage;
+    return "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1400&q=80";
   }
 
   if (title.includes("graphic")) {
-    return graphicsDesignerImage;
+    return "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80";
   }
 
   if (title.includes("basic computer")) {
-    return pcUsersGroupImage;
+    return "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80";
   }
 
   if (title.includes("hardware") || title.includes("network")) {
-    return pcUsersGroupImage;
+    return "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1400&q=80";
   }
 
   if (title.includes("ai") || title.includes("machine learning")) {
-    return programmerImage;
+    return "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1400&q=80";
   }
 
   if (title.includes("programming") || title.includes("website") || title.includes("web")) {
-    return programmerImage;
+    return "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1400&q=80";
   }
 
-  if (course.iconName === "video") return cameraMaleImage;
-  if (course.iconName === "paint" || course.iconName === "pen") return graphicsDesignerImage;
-  if (course.iconName === "code" || course.iconName === "database") return programmerImage;
-  if (course.iconName === "network" || course.iconName === "laptop") return pcUsersGroupImage;
+  if (course.iconName === "video") return "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1400&q=80";
+  if (course.iconName === "paint" || course.iconName === "pen") return "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80";
+  if (course.iconName === "code" || course.iconName === "database") return "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=80";
+  if (course.iconName === "network" || course.iconName === "laptop") return "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1400&q=80";
 
-  return cameraFemaleImage;
+  return "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80";
 };
 
 const CourseCard = ({
